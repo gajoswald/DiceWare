@@ -3,10 +3,19 @@
 let fontSize = 24;
 let words = new Map();
 let phrase = [];
-let helpText = "space to generate a new word, (d)igit, (s)ymbol, (r)eset, (c)amel case, (u)pper case, CTRL/CMD+C copy, (h)elp text";   
-let notificationText = helpText;
+let drawHelpText = true;
+let helpText = [
+  "space to generate a new word",
+  "(d)igit",
+  "(s)ymbol",
+  "(r)eset",
+  "(c)amel case",
+  "(u)pper case",
+  "CTRL/CMD+C copy",
+  "(h)elp text"
+];   
+let notificationText = "";
 function preload() {
-  // const all = loadStrings('diceware8k.txt');
 	loadStrings('beale.wordlist.asc.txt', createMap );
 }
 
@@ -29,6 +38,19 @@ function draw() {
 	background(100);
 	showPassword();
 	showNotificationText();	
+  if( drawHelpText ) { showHelpText(); }
+}
+
+function showHelpText() {
+  textSize(16);
+  const maxWidth = helpText.reduce( (max, currentString) => { return textWidth(currentString) > max ? textWidth(currentString) : max}, 0 );
+  fill(200);
+  rect( 20, 20, maxWidth + 20, (16+5) * helpText.length + 10 );
+  fill(0);
+  for( let i = 1; i <= helpText.length; i++ ) {
+    text(helpText[i-1], 30, 20+21 * i );
+  }
+  textSize(fontSize);
 }
 
 function showNotificationText() {
@@ -92,6 +114,9 @@ function keyPressed() {
 	if( key === "s" ) {
 		phrase.push( random( ["!","@","#","$","%","^","&","*","(",")","<",">","?","{","}","[","]","-","_","+","=","|"] ));
 	}
+  if( key === "h" ) {
+    drawHelpText = !drawHelpText;
+  }
 	redraw();
 }
 
